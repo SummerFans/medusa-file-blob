@@ -8,6 +8,8 @@ type InjectedDependencies = {
 
 type BlobFileServiceConfig = {
   blob_read_write_token: string;
+  add_random_suffix?: boolean;
+  cache_control_maxAge?: number;
 };
 
 export class BlobFileService extends AbstractFileProviderService {
@@ -17,13 +19,15 @@ export class BlobFileService extends AbstractFileProviderService {
 
   constructor(
     { logger }: InjectedDependencies,
-    { blob_read_write_token }: BlobFileServiceConfig
+    { blob_read_write_token, add_random_suffix, cache_control_maxAge }: BlobFileServiceConfig
   ) {
     super();
 
     this.logger_ = logger;
     this.config_ = {
       blob_read_write_token,
+      add_random_suffix,
+      cache_control_maxAge,
     };
   }
 
@@ -31,11 +35,17 @@ export class BlobFileService extends AbstractFileProviderService {
     file: FileTypes.ProviderUploadFileDTO
   ): Promise<FileTypes.ProviderFileResultDTO> {
     let blob;
+    if (!file) {
+      throw new MedusaError(MedusaError.Types.INVALID_DATA, `No file provided`)
+    }
     try {
-      blob = await put(file.filename, file.content, {
+      const content = Buffer.from(file.content, "binary")
+      blob = await put(file.filename, content, {
         access: "public",
         token: this.config_.blob_read_write_token,
-        addRandomSuffix: false,
+        addRandomSuffix: this.config_.add_random_suffix ?? false,
+        contentType:file.mimeType,
+        cacheControlMaxAge: this.config_.cache_control_maxAge ?? 31536000
       });
       this.logger_.info(blob.url);
     } catch (e) {
