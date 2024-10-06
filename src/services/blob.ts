@@ -1,7 +1,7 @@
 import { AbstractFileProviderService, MedusaError } from "@medusajs/utils";
 import { FileTypes, Logger } from "@medusajs/types";
 import { put, del } from "@vercel/blob";
-import { nanoid } from 'nanoid'
+import { v4 as uuidv4 } from 'uuid'
 
 
 type InjectedDependencies = {
@@ -46,7 +46,8 @@ export class BlobFileService extends AbstractFileProviderService {
 
       if (!this.config_.add_random_suffix) {
         // If you need to add a random suffix, do not change the file name
-        filename = nanoid(10);
+        const extension = filename.split('.').pop();
+        filename = `${uuidv4()}.${extension}`;
       }
 
       blob = await put(filename, content, {
