@@ -1,6 +1,8 @@
 import { AbstractFileProviderService, MedusaError } from "@medusajs/utils";
 import { FileTypes, Logger } from "@medusajs/types";
-import { put, del, list, ListCommandOptions } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
+import { nanoid } from 'nanoid'
+
 
 type InjectedDependencies = {
   logger: Logger;
@@ -39,12 +41,19 @@ export class BlobFileService extends AbstractFileProviderService {
       throw new MedusaError(MedusaError.Types.INVALID_DATA, `No file provided`)
     }
     try {
-      const content = Buffer.from(file.content, "binary")
-      blob = await put(file.filename, content, {
-        access: "public",
+      let filename = file.filename;
+      const content = Buffer.from(file.content, 'binary')
+
+      if (!this.config_.add_random_suffix) {
+        // If you need to add a random suffix, do not change the file name
+        filename = nanoid(10);
+      }
+
+      blob = await put(filename, content, {
+        access: 'public',
         token: this.config_.blob_read_write_token,
         addRandomSuffix: this.config_.add_random_suffix ?? false,
-        contentType:file.mimeType,
+        contentType: file.mimeType,
         cacheControlMaxAge: this.config_.cache_control_maxAge ?? 31536000
       });
       this.logger_.info(blob.url);
@@ -56,6 +65,9 @@ export class BlobFileService extends AbstractFileProviderService {
   }
 
   async delete(file: FileTypes.ProviderDeleteFileDTO): Promise<void> {
+
+    this.logger_.debug("[DELETE]");
+
     try {
       await del(file.fileKey);
       this.logger_.info(file.fileKey);
@@ -69,32 +81,8 @@ export class BlobFileService extends AbstractFileProviderService {
     fileData: FileTypes.ProviderGetFileDTO
   ): Promise<string> {
     // TODO: Allow passing content disposition when getting a presigned URL
-    // const command = new GetObjectCommand({
-    //   Bucket: this.config_.bucket,
-    //   Key: `${fileData.fileKey}`,
-    // });
-
-    // return await getSignedUrl(this.client_, command, {
-    //   expiresIn: this.config_.downloadFileDuration,
-    // });
 
     return;
   }
 
-  async list(option:ListCommandOptions) {
-
-    let option_:ListCommandOptions = {
-      token:this.config_.blob_read_write_token,
-      limit:option.limit||50
-    }
-    if (option.cursor){
-      option_.cursor = option.cursor
-    }
-    if(option.prefix) {
-      option_.prefix = option.prefix
-    }
-
-    const res = await list(option_);
-    return res
-  }
 }
