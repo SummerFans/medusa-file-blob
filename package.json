@@ -33,9 +33,9 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@medusajs/medusa": "latest",
-    "@medusajs/types": "latest",
-    "@medusajs/utils": "latest",
+    "@medusajs/medusa": "2.0.0",
+    "@medusajs/types": "2.0.0",
+    "@medusajs/utils": "2.0.0",
     "@trycourier/courier": "^6.2.1",
     "@vercel/blob": "^0.23.4",
     "uuid": "^10.0.0"
