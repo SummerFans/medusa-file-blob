@@ -1,6 +1,6 @@
 {
   "name": "medusa-file-blob",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Blob file provider for Medusa v2",
   "main": "dist/index.js",
   "repository": {
