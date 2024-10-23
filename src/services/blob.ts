@@ -15,7 +15,7 @@ type BlobFileServiceConfig = {
 };
 
 export class BlobFileService extends AbstractFileProviderService {
-  static identifier = "blob";
+  static identifier = "file-blob";
   protected config_: BlobFileServiceConfig;
   protected logger_: Logger;
 
