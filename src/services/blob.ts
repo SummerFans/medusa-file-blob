@@ -57,7 +57,7 @@ export class BlobFileService extends AbstractFileProviderService {
         contentType: file.mimeType,
         cacheControlMaxAge: this.config_.cache_control_maxAge ?? 31536000
       });
-      this.logger_.info(blob.url);
+      this.logger_.debug(blob.url);
     } catch (e) {
       this.logger_.error(e?.message);
       throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, e?.message);
@@ -66,12 +66,9 @@ export class BlobFileService extends AbstractFileProviderService {
   }
 
   async delete(file: FileTypes.ProviderDeleteFileDTO): Promise<void> {
-
-    this.logger_.debug("[DELETE]");
-
     try {
       await del(file.fileKey);
-      this.logger_.info(file.fileKey);
+      this.logger_.debug(file.fileKey);
     } catch (e) {
       this.logger_.error(e?.message);
       throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, e?.message)

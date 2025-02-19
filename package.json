@@ -1,11 +1,11 @@
 {
   "name": "medusa-file-blob",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Blob file provider for Medusa v2",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/summerfans/medusa-notification-courier"
+    "url": "https://github.com/summerfans/medusa-file-blob"
   },
   "files": [
     "dist"
@@ -33,11 +33,11 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@medusajs/medusa": "2.0.0",
-    "@medusajs/types": "2.0.0",
-    "@medusajs/utils": "2.0.0",
+    "@medusajs/medusa": "~2.5.0",
+    "@medusajs/types": "~2.5.0",
+    "@medusajs/utils": "~2.5.0",
     "@trycourier/courier": "^6.2.1",
-    "@vercel/blob": "^0.23.4",
+    "@vercel/blob": "^0.27.1",
     "uuid": "^10.0.0"
   },
   "keywords": [
